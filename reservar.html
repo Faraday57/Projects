@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Boda - Elegance Weddings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">💕 Elegance Weddings</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
+                <li><a href="reservar.html" class="active">Reservar</a></li>
+                <li><a href="ubicacion.html">Ubicación</a></li>
+                <li><a href="nosotros.html">Nosotros</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>💍 Reserva Tu Boda</h1>
+        <p>Completa el formulario y nos pondremos en contacto contigo en menos de 24 horas</p>
+    </section>
+
+    <!-- Reservation Form Section -->
+    <section class="reservation-section">
+        <div class="reservation-container fade-in">
+            <div class="success-message" id="successMessage">
+                ✓ ¡Gracias! Tu solicitud ha sido enviada exitosamente. Nos pondremos en contacto contigo pronto.
+            </div>
+            
+            <form id="reservationForm" class="reservation-form">
+                <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">Información de los Novios</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Novio/a *</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido *</label>
+                        <input type="text" id="apellido" name="apellido" required placeholder="Apellido">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico *</label>
+                        <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono / WhatsApp *</label>
+                        <input type="tel" id="telefono" name="telefono" required placeholder="+591 700 00000">
+                    </div>
+                </div>
+
+                <h3 style="color: var(--primary); margin: 2rem 0 1.5rem; text-align: center;">Detalles del Evento</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha">Fecha Estimada del Evento *</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora">Hora Aproximada</label>
+                        <select id="hora" name="hora">
+                            <option value="">Selecciona un horario</option>
+                            <option value="manana">Mañana (9:00 - 12:00)</option>
+                            <option value="mediodia">Mediodía (12:00 - 15:00)</option>
+                            <option value="tarde">Tarde (15:00 - 18:00)</option>
+                            <option value="noche">Noche (18:00 - 23:00)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="invitados">Número de Invitados *</label>
+                        <input type="number" id="invitados" name="invitados" min="1" required placeholder="Ej: 150">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Evento *</label>
+                        <select id="tipo" name="tipo" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="clasica">Boda Clásica</option>
+                            <option value="aire-libre">Boda al Aire Libre</option>
+                            <option value="moderna">Boda Moderna</option>
+                            <option value="intima">Boda Íntima (hasta 50 personas)</option>
+                            <option value="destino">Boda de Destino</option>
+                            <option value="tematica">Boda Temática</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="presupuesto">Presupuesto Estimado</label>
+                    <select id="presupuesto" name="presupuesto">
+                        <option value="">Selecciona un rango</option>
+                        <option value="15000-30000">$15,000 - $30,000</option>
+                        <option value="30000-50000">$30,000 - $50,000</option>
+                        <option value="50000-80000">$50,000 - $80,000</option>
+                        <option value="80000+">Más de $80,000</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="lugar">Preferencia de Lugar</label>
+                    <select id="lugar" name="lugar">
+                        <option value="">Selecciona una opción</option>
+                        <option value="salon">Salón de Eventos</option>
+                        <option value="jardin">Jardín al Aire Libre</option>
+                        <option value="playa">Playa o Destino</option>
+                        <option value="hotel">Hotel</option>
+                        <option value="hacienda">Hacienda / Quinta</option>
+                        <option value="otro">Otro (especificar en mensaje)</option>
+                    </select>
+                </div>
+
+                <h3 style="color: var(--primary); margin: 2rem 0 1.5rem; text-align: center;">Servicios Requeridos</h3>
+
+                <div class="form-group">
+                    <label style="margin-bottom: 1rem; display: block;">¿Qué servicios necesitas? (puedes seleccionar varios)</label>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="decoracion"> Decoración y Ambientación
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="catering"> Catering y Banquete
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="fotografia"> Fotografía Profesional
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="video"> Video y Edición
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="musica"> Música en Vivo / DJ
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="pastel"> Pastel de Bodas
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="flores"> Arreglos Florales
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                            <input type="checkbox" name="servicios[]" value="coordinacion"> Coordinación del Evento
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="mensaje">Cuéntanos sobre tu boda ideal</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Describe el estilo, colores, tema, o cualquier detalle especial que quieras incluir en tu boda..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+                        <input type="checkbox" required> Acepto los términos y condiciones y la política de privacidad *
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Enviar Solicitud de Reserva</button>
+                
+                <p style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                    * Campos obligatorios
+                </p>
+            </form>
+        </div>
+
+        <!-- Contact Info Sidebar -->
+        <div class="contact-sidebar">
+            <div class="contact-card fade-in">
+                <h3>¿Necesitas ayuda?</h3>
+                <p>Contáctanos directamente</p>
+                
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <div>
+                        <strong>Teléfono</strong>
+                        <p>+591 3 789 4567</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">📱</span>
+                    <div>
+                        <strong>WhatsApp</strong>
+                        <p>+591 700 12345</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <div>
+                        <strong>Email</strong>
+                        <p>info@eleganceweddings.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <span class="contact-icon">⏰</span>
+                    <div>
+                        <strong>Horario</strong>
+                        <p>Lun - Vie: 9:00 - 18:00<br>Sábados: 10:00 - 14:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-card fade-in">
+                <h3>Proceso de Reserva</h3>
+                <ol class="process-list">
+                    <li>✓ Completa el formulario</li>
+                    <li>✓ Recibe nuestra llamada en 24h</li>
+                    <li>✓ Agenda una cita presencial</li>
+                    <li>✓ Recibe tu propuesta personalizada</li>
+                    <li>✓ ¡Confirma y comienza a planificar!</li>
+                </ol>
+            </div>
+
+            <div class="contact-card fade-in" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white;">
+                <h3 style="color: white;">💎 Oferta Especial</h3>
+                <p>Reserva antes del 31 de marzo y obtén:</p>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li>✓ 15% de descuento</li>
+                    <li>✓ Sesión fotográfica gratis</li>
+                    <li>✓ Coordinador exclusivo</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Elegance Weddings</h3>
+                <p>Creando momentos inolvidables desde 2010</p>
+                <p>💕 Tu boda perfecta comienza aquí</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📞 +591 3 789 4567</p>
+                <p>📱 WhatsApp: +591 700 12345</p>
+                <p>📧 info@eleganceweddings.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>Horario</h4>
+                <p>Lun - Vie: 9:00 - 18:00</p>
+                <p>Sábados: 10:00 - 14:00</p>
+                <p>Domingos: Cerrado</p>
+            </div>
+            <div class="footer-section">
+                <h4>Ubicación</h4>
+                <p>📍 Av. San Martín 1850</p>
+                <p>Entre 2do y 3er Anillo</p>
+                <p>Santa Cruz, Bolivia</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Elegance Weddings. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

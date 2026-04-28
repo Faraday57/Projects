@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIFRANZ WiFi — Simulador de Red</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-mark">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="3" fill="#00ff94"/>
+          <path d="M8 16 A8 8 0 0 1 24 16" stroke="#00ff94" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>
+          <path d="M3 16 A13 13 0 0 1 29 16" stroke="#00ff94" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <span class="header-title">UNIFRANZ WiFi</span>
+        <span class="header-sub">Simulador técnico · Piso 5</span>
+      </div>
+      <div class="header-badge">2.4 GHz · 802.11n</div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+
+    <!-- LEFT PANEL: Controls -->
+    <aside class="panel panel-controls">
+      <div class="panel-heading">
+        <span class="panel-icon">⚙</span>
+        <span>Parámetros del escenario</span>
+      </div>
+
+      <div class="control-group">
+        <label class="ctrl-label">
+          <span>Distancia al AP</span>
+          <span class="ctrl-value" id="dist-display">15 m</span>
+        </label>
+        <div class="slider-track">
+          <input type="range" id="dist" min="1" max="34" value="15" step="1" class="slider">
+          <div class="slider-marks">
+            <span>1m</span><span>10m</span><span>20m</span><span>34m</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="ctrl-label">
+          <span>Paredes de concreto</span>
+          <span class="ctrl-value" id="walls-display">1 pared (8 dB)</span>
+        </label>
+        <div class="walls-selector" id="walls-selector">
+          <button class="wall-btn" data-val="0">Sin paredes<br><small>0 dB</small></button>
+          <button class="wall-btn active" data-val="1">1 pared<br><small>8 dB</small></button>
+          <button class="wall-btn" data-val="2">2 paredes<br><small>16 dB</small></button>
+        </div>
+        <input type="hidden" id="walls" value="1">
+      </div>
+
+      <div class="control-group">
+        <label class="ctrl-label">
+          <span>Usuarios simultáneos</span>
+          <span class="ctrl-value" id="users-display">50</span>
+        </label>
+        <div class="slider-track">
+          <input type="range" id="users" min="1" max="250" value="50" step="1" class="slider">
+          <div class="slider-marks">
+            <span>1</span><span>50</span><span>150</span><span>250</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="ctrl-label">
+          <span>Eficiencia del canal</span>
+          <span class="ctrl-value" id="eff-display">60%</span>
+        </label>
+        <div class="eff-selector" id="eff-selector">
+          <button class="eff-btn active" data-val="0.60">Normal<br><small>60%</small></button>
+          <button class="eff-btn" data-val="0.40">Degradado<br><small>40%</small></button>
+        </div>
+        <input type="hidden" id="eff" value="0.60">
+      </div>
+
+      <div class="control-group">
+        <label class="ctrl-label">
+          <span>Consumo por usuario</span>
+          <span class="ctrl-value" id="bw-display">3.0 Mbps</span>
+        </label>
+        <div class="slider-track">
+          <input type="range" id="bw" min="1" max="10" value="3" step="0.5" class="slider">
+          <div class="slider-marks">
+            <span>1</span><span>3</span><span>6</span><span>10</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="run-btn" id="runBtn">
+        <span class="run-icon">▶</span>
+        <span id="run-label">Ejecutar simulación</span>
+      </button>
+
+      <div class="fixed-params">
+        <div class="fp-title">Parámetros fijos</div>
+        <div class="fp-row"><span>Pt</span><span>20 dBm</span></div>
+        <div class="fp-row"><span>Gt</span><span>3 dBi</span></div>
+        <div class="fp-row"><span>Gr</span><span>2 dBi</span></div>
+        <div class="fp-row"><span>EIRP</span><span>25 dBm</span></div>
+        <div class="fp-row"><span>Sens. óptima</span><span>−65 dBm</span></div>
+        <div class="fp-row"><span>Sens. límite</span><span>−80 dBm</span></div>
+        <div class="fp-row"><span>Frecuencia</span><span>2400 MHz</span></div>
+        <div class="fp-row"><span>n (interior)</span><span>3</span></div>
+        <div class="fp-row"><span>Vel. nominal</span><span>130 Mbps</span></div>
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL: Main Results -->
+    <section class="panel panel-main">
+
+      <!-- Three Signal Meters -->
+      <div class="triple-gauges">
+
+        <!-- Gauge 1: 0–90 dBm · Red palette -->
+        <div class="gauge-card gauge-red">
+          <div class="gauge-top-label">Señal FSPL</div>
+          <div class="gauge-ring-wrap">
+            <svg viewBox="0 0 180 180" width="180" height="180">
+              <circle cx="90" cy="90" r="74" fill="none" stroke="#1a0a0a" stroke-width="14"/>
+              <circle cx="90" cy="90" r="74" fill="none" stroke-width="14" stroke-linecap="round"
+                stroke-dasharray="465" stroke-dashoffset="465" id="ring1-fill"
+                style="transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1s ease,stroke .4s"/>
+              <circle cx="90" cy="90" r="60" fill="none" stroke="#0d0505" stroke-width="1"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-val" id="g1-val">—</div>
+              <div class="gauge-unit">dBm</div>
+              <div class="gauge-range">0 – 90</div>
+            </div>
+          </div>
+          <div class="gauge-speed" id="g1-speed">— Mbps</div>
+          <div class="gauge-speed-label">throughput usuario</div>
+          <div class="gauge-quality" id="g1-quality">—</div>
+        </div>
+
+        <!-- Gauge 2: 0–150 dBm · Orange palette -->
+        <div class="gauge-card gauge-orange gauge-main">
+          <div class="gauge-top-label">Señal + Obstáculos</div>
+          <div class="gauge-ring-wrap">
+            <svg viewBox="0 0 220 220" width="220" height="220">
+              <circle cx="110" cy="110" r="92" fill="none" stroke="#1a0f00" stroke-width="16"/>
+              <circle cx="110" cy="110" r="92" fill="none" stroke-width="16" stroke-linecap="round"
+                stroke-dasharray="578" stroke-dashoffset="578" id="ring2-fill"
+                style="transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1s ease,stroke .4s"/>
+              <circle cx="110" cy="110" r="76" fill="none" stroke="#0d0800" stroke-width="1"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-val gauge-val-lg" id="g2-val">—</div>
+              <div class="gauge-unit">dBm</div>
+              <div class="gauge-range">0 – 150</div>
+            </div>
+          </div>
+          <div class="gauge-speed gauge-speed-lg" id="g2-speed">— Mbps</div>
+          <div class="gauge-speed-label">capacidad AP</div>
+          <div class="gauge-quality" id="g2-quality">—</div>
+          <div class="gauge-bars" id="sig-bars">
+            <div class="sig-bar" id="sb1" style="height:14px"></div>
+            <div class="sig-bar" id="sb2" style="height:20px"></div>
+            <div class="sig-bar" id="sb3" style="height:28px"></div>
+            <div class="sig-bar" id="sb4" style="height:36px"></div>
+          </div>
+        </div>
+
+        <!-- Gauge 3: 0–200 dBm · Purple palette -->
+        <div class="gauge-card gauge-purple">
+          <div class="gauge-top-label">Modelo Interior</div>
+          <div class="gauge-ring-wrap">
+            <svg viewBox="0 0 180 180" width="180" height="180">
+              <circle cx="90" cy="90" r="74" fill="none" stroke="#0d0a1a" stroke-width="14"/>
+              <circle cx="90" cy="90" r="74" fill="none" stroke-width="14" stroke-linecap="round"
+                stroke-dasharray="465" stroke-dashoffset="465" id="ring3-fill"
+                style="transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1s ease,stroke .4s"/>
+              <circle cx="90" cy="90" r="60" fill="none" stroke="#07050d" stroke-width="1"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-val" id="g3-val">—</div>
+              <div class="gauge-unit">dBm</div>
+              <div class="gauge-range">0 – 200</div>
+            </div>
+          </div>
+          <div class="gauge-speed" id="g3-speed">— Mbps</div>
+          <div class="gauge-speed-label">cap. degradada (40%)</div>
+          <div class="gauge-quality" id="g3-quality">—</div>
+        </div>
+
+      </div>
+
+      <!-- Speed Gauges -->
+      <div class="speed-row">
+        <div class="speed-card" id="dl-card">
+          <div class="speed-label">↓ throughput / usuario</div>
+          <div class="speed-val" id="dl-val">—</div>
+          <div class="speed-unit">Mbps</div>
+          <div class="speed-bar-wrap">
+            <div class="speed-bar" id="dl-bar"></div>
+          </div>
+          <div class="speed-ref" id="dl-ref">objetivo: 3.0 Mbps</div>
+        </div>
+        <div class="speed-card" id="cap-card">
+          <div class="speed-label">⚡ capacidad AP</div>
+          <div class="speed-val" id="cap-val">—</div>
+          <div class="speed-unit">Mbps</div>
+          <div class="speed-bar-wrap">
+            <div class="speed-bar" id="cap-bar" style="background:#378add"></div>
+          </div>
+          <div class="speed-ref">nominal: 130 Mbps</div>
+        </div>
+        <div class="speed-card" id="lat-card">
+          <div class="speed-label">⏱ latencia estimada</div>
+          <div class="speed-val" id="lat-val">—</div>
+          <div class="speed-unit">ms</div>
+          <div class="speed-bar-wrap">
+            <div class="speed-bar" id="lat-bar" style="background:#d85a30"></div>
+          </div>
+          <div class="speed-ref" id="lat-ref">—</div>
+        </div>
+      </div>
+
+      <!-- AP Counter -->
+      <div class="ap-hero" id="ap-hero">
+        <div class="ap-counter-wrap">
+          <div class="ap-label-top">APs necesarios</div>
+          <div class="ap-number" id="ap-number">—</div>
+          <div class="ap-label-bottom" id="ap-sublabel">para la demanda actual</div>
+        </div>
+        <div class="ap-formula" id="ap-formula">
+          <div class="formula-line">APs = ⌈ Demanda / Cap_AP ⌉</div>
+          <div class="formula-result" id="formula-result">= ⌈ — / — ⌉ = —</div>
+        </div>
+      </div>
+
+      <!-- Verdict -->
+      <div class="verdict" id="verdict"></div>
+    </section>
+
+    <!-- RIGHT PANEL: RF Calculations -->
+    <aside class="panel panel-rf">
+      <div class="panel-heading">
+        <span class="panel-icon">📡</span>
+        <span>Cálculos RF en vivo</span>
+      </div>
+
+      <div class="calc-block">
+        <div class="calc-title">FSPL (espacio libre)</div>
+        <div class="calc-formula mono">32.44 + 20·log(f) + 20·log(d)</div>
+        <div class="calc-steps" id="fspl-steps">
+          <div class="calc-step">f = 2400 MHz</div>
+          <div class="calc-step">20·log(2400) = 67.60 dB</div>
+          <div class="calc-step" id="s-logd">20·log(d) = —</div>
+          <div class="calc-step result" id="s-fspl">FSPL = — dB</div>
+        </div>
+      </div>
+
+      <div class="calc-block">
+        <div class="calc-title">Potencia recibida</div>
+        <div class="calc-formula mono">Pr = Pt + Gt + Gr − FSPL − L</div>
+        <div class="calc-steps">
+          <div class="calc-step">25 dBm (EIRP) − FSPL − L</div>
+          <div class="calc-step" id="s-loss">L (obstáculos) = — dB</div>
+          <div class="calc-step result" id="s-pr">Pr = — dBm</div>
+        </div>
+      </div>
+
+      <div class="calc-block">
+        <div class="calc-title">Margen de enlace</div>
+        <div class="calc-formula mono">Margen = Pr − Sensibilidad</div>
+        <div class="calc-steps">
+          <div class="calc-step" id="s-m-opt">vs. −65 dBm (óptima) = — dB</div>
+          <div class="calc-step" id="s-m-lim">vs. −80 dBm (límite) = — dB</div>
+          <div class="calc-step result" id="s-verdict-rf">Estado: —</div>
+        </div>
+      </div>
+
+      <div class="calc-block">
+        <div class="calc-title">Modelo interior (n=3)</div>
+        <div class="calc-formula mono">PL = 40 + 30·log(d/1)</div>
+        <div class="calc-steps">
+          <div class="calc-step" id="s-pl">PL(d) = — dB</div>
+          <div class="calc-step" id="s-pr-int">Pr interior = — dBm</div>
+          <div class="calc-step result" id="s-diff">Δ vs FSPL = — dB</div>
+        </div>
+      </div>
+
+      <div class="calc-block">
+        <div class="calc-title">Análisis de capacidad</div>
+        <div class="calc-formula mono">Cap = 130 × eff</div>
+        <div class="calc-steps">
+          <div class="calc-step" id="s-cap">Cap real = — Mbps</div>
+          <div class="calc-step" id="s-maxu">Usuarios/AP = — </div>
+          <div class="calc-step" id="s-demand">Demanda = — Mbps</div>
+          <div class="calc-step result" id="s-aps">APs = ⌈—/—⌉ = —</div>
+        </div>
+      </div>
+
+      <div class="dist-table">
+        <div class="calc-title" style="margin-bottom:10px">Referencia FSPL</div>
+        <table>
+          <thead>
+            <tr><th>d</th><th>FSPL</th><th>Pr (E0)</th><th>Estado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>5 m</td><td>54.02</td><td>−29.02</td><td class="td-ex">Excelente</td></tr>
+            <tr><td>15 m</td><td>63.56</td><td>−38.56</td><td class="td-bk">Buena</td></tr>
+            <tr><td>30 m</td><td>69.58</td><td>−44.58</td><td class="td-mg">Marginal</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Floor map visualization -->
+  <section class="floor-section">
+    <div class="floor-heading">
+      <span>Mapa del piso 5 — distribución de APs recomendada</span>
+      <span class="floor-badge" id="floor-badge">—</span>
+    </div>
+    <div class="floor-wrap">
+      <canvas id="floorCanvas" width="680" height="260"></canvas>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>UNIFRANZ WiFi Simulator · Análisis técnico RF · 2.4 GHz 802.11n</span>
+    <span>Fórmulas: FSPL (Friis), Log-Distance Path Loss, Ecuación de enlace</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
